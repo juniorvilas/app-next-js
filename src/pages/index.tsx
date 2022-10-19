@@ -1,9 +1,18 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
+import { Person } from '../types/global'
 
 const Home: NextPage = () => {
+  const [person, setPerson] = useState<Person[]>();
+  useEffect(() => {
+    fetch("https://rickandmortyapi.com/api/character")
+      .then(response => response.json())
+      .then(data => setPerson(data.results))
+  }, [])
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +25,16 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-
+        <h1 className={styles.title}>
+          Characters Rick and Morty
+        </h1>
+        <div>
+          {person?.map((person, index) => {
+            return (
+              <p key={index}>{person.name}</p>
+            )
+          })}
+        </div>
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.tsx</code>
@@ -65,7 +83,7 @@ const Home: NextPage = () => {
           </span>
         </a>
       </footer>
-    </div>
+    </div >
   )
 }
 
